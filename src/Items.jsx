@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import SingleItem from "./SingleItem";
 const Items = ({ items }) => {
-	const result = useQuery({
+	const { isLoading, data } = useQuery({
 		queryKey: ["tasks"],
 		queryFn: () => customFetch.get("/"),
 	});
-	console.log(result);
 
+	if (isLoading) {
+		return <p style={{ marginTop: "1rem" }}>Loading...</p>;
+	}
 	return (
 		<div className="items">
 			{items.map((item) => {
