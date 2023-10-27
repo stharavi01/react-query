@@ -1,17 +1,26 @@
 import { useQuery } from "@tanstack/react-query";
 import SingleItem from "./SingleItem";
+import customFetch from "./utils";
 const Items = ({ items }) => {
-	const { isLoading, data } = useQuery({
+	const { isLoading, data, isError, error } = useQuery({
 		queryKey: ["tasks"],
-		queryFn: () => customFetch.get("/"),
+		queryFn: async () => {
+			const { data } = await customFetch.get("/");
+			return data;
+		},
 	});
 
 	if (isLoading) {
 		return <p style={{ marginTop: "1rem" }}>Loading...</p>;
 	}
+
+	if (isError) {
+		return <p style={{ marginTop: "1rem" }}>There was an error.</p>;
+	}
+
 	return (
 		<div className="items">
-			{items.map((item) => {
+			{data.taskList.map((item) => {
 				return <SingleItem key={item.id} item={item} />;
 			})}
 		</div>
